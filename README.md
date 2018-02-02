@@ -33,13 +33,13 @@ How to Use Install (fleet-host installation)
 
 ### adding the fleet host
 0) Install **osquery** and **git** on the target host
-1) Update (hostname, CA crt location, and JWT_KEY) and run the following command:
+1) Update (hostname, CA crt location, and ENROLLMENT_KEY).  The ENROLLMENT_KEY can be found under the Admin->App Settings under the "OSQuery Enrollment Secret".  After obtaining and updating the values, run the following command:
 
 ```
  git clone https://github.com/deeso/fleet-deployment.git
 cd fleet-deployment/fleet-ubuntu-host
 bash setup_osquery_remote.sh -host NAME.kolide.tls.server \
--ca CA_CRT_ON_WEB_HOST -secret JWT_KEY
+-ca CA_CRT_ON_WEB_HOST -secret ENROLLMENT_KEY
 cd ../..
 rm -rf fleet-deployment
 ```
