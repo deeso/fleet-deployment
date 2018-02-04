@@ -3,11 +3,11 @@
 # -crt https://gist.githubusercontent.com/deeso/1234/raw/1234/fleetserver-ca.crt \
 # -secret s3kr3t
 USAGE="Usage: `basename $0` -help | -host [host] -ca [HTTP_LOC_CERT] -secret [OSQUERY_SECRET]"
-OSQUERY=/usr/bin/osqueryd
+OSQUERY=/usr/local/bin/osqueryd
 
-RSYSLOG_PATH=/etc/rsyslog.conf
+# RSYSLOG_PATH=/etc/rsyslog.conf
 
-BASE=/etc/osquery
+BASE=/var/osquery/
 PACKS=$BASE/packs/
 OSQUERY_SECRET_PATH=$BASE/secret.txt
 TSSL=$BASE/ssl
@@ -63,12 +63,15 @@ ADDL_FLAGS="--host_identifier=uuid
 --enroll_secret_path=$OSQUERY_SECRET_PATH
 --tls_server_certs=$SSL_CA
 --tls_hostname=$TLS_HOST
---verbose=true"
+--logger_plugin=filesystem
+--verbose=true
+"
 
 git clone https://github.com/palantir/osquery-configuration.git
-echo "$ADDL_FLAGS" > osquery-configuration/Servers/Linux/osquery.flags 
-sudo cp -R osquery-configuration/Servers/Linux/* $BASE
-sudo cp -Rr osquery-configuration/Servers/Linux/packs/* $PACKS
+echo "$ADDL_FLAGS" > osquery-configuration/Endpoints/MacOS/osquery.flags 
+rm osquery-configuration/Endpoints/MacOS/osquery_no_tls.flags
+sudo cp -rf osquery-configuration/Endpoints/MacOS/* $BASE
+sudo cp -rf osquery-configuration/Endpoints/packs/* $PACKS
 rm -rf osquery-configuration
 
 sudo mkdir -p $TSSL
@@ -91,11 +94,11 @@ template(
 *.* action(type="ompipe" Pipe="/var/osquery/syslog_pipe" template="OsqueryCsvFormat")
 '
 
-HAS_RSYSLOG_MOD=$(cat $RSYSLOG_PATH | grep "OsqueryCsvFormat")
-if [ -z "$VAR"  ]; then
-    echo "$DO_RSYSLOG_APPEND" | sudo tee --append $RSYSLOG_PATH > /dev/null
-    sudo etc/init.d/rsyslog restart
-fi
+# HAS_RSYSLOG_MOD=$(cat $RSYSLOG_PATH | grep "OsqueryCsvFormat")
+# if [ -z "$VAR"  ]; then
+#     echo "$DO_RSYSLOG_APPEND" | sudo tee --append $RSYSLOG_PATH > /dev/null
+#     sudo etc/init.d/rsyslog restart
+# fi
 
 
 sudo osqueryctl start
