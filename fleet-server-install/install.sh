@@ -73,7 +73,7 @@ sudo apt-get install unzip openssl redis-server mysql-server -y
 # get fleet
 wget --no-check-certificate https://dl.kolide.co/bin/fleet_latest.zip
 unzip fleet_latest.zip 'linux/*' -d tmp_fleet
-sudo cp tmp_fleet/linux/fleet* /usr/bin/fleet
+sudo cp tmp_fleet/linux/fleet* /usr/bin/
 rm -r tmp_fleet fleet_latest.zip
 
 # create target directories
